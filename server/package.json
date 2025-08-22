@@ -1,10 +1,10 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "./index.ts",
   "scripts": {
-    "dev": "npx ts-node index.ts",
-    "populate": "npx ts-node populate-database.ts"
+    "dev": "npx tsx index.ts",
+    "populate": "npx tsx populate-database.ts"
   },
   "keywords": [],
   "author": "",
@@ -27,7 +27,7 @@
     "express": "^5.1.0",
     "langchain": "^0.3.31",
     "mongodb": "^6.18.0",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.20.4",
     "zod": "^3.25.76"
   }
 }
