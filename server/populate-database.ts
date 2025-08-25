@@ -85,7 +85,7 @@ async function createVectorIndex(): Promise<void> {
 }
 
 async function createItemData(): Promise<Item[]> {
-  const prompt = `You are an assistant that generates furniture store item data. Generate 15 furniture store items. Each record should include the following fields: item_id, item_name, item_description, brand, manufacturer_address, prices, categories, user_reviews, notes. Ensure variety in the data and realistic values.
+  const prompt = `You are an assistant that generates furniture store item data. Generate 15 furniture store items. Each record should include the following fields: item_id, item_name, item_desc, brand, manufacturer_address, prices, categories, reviews, notes. Ensure variety in the data and realistic values.
 
   ${parser.getFormatInstructions()}`; // Add format instructions from parser
 
@@ -121,31 +121,31 @@ async function createItemSummary(item: Item): Promise<string> {
 async function populateDatabase(): Promise<void> {
   try {
     // Establish connection to MongoDB Atlas
-    await client.connect()
+    await client.connect();
     // Ping database to verify connection works
-    await client.db("admin").command({ ping: 1 })
+    await client.db("admin").command({ ping: 1 });
 
-    await dbSetup()
-    await createVectorIndex()
+    await dbSetup();
+    await createVectorIndex();
 
-    const db = client.db("inventory_database")
-    const collection = db.collection("items")
+    const db = client.db("inventory_database");
+    const collection = db.collection("items");
 
     // Clear existing data from collection
-    await collection.deleteMany({})
-    console.log("Cleared existing data from items collection")
-    
+    await collection.deleteMany({});
+    console.log("Cleared existing data from items collection");
+
     // Generate new furniture data
-    const syntheticData = await createItemData()
+    const syntheticData = await createItemData();
 
     // Process each item: create summary and prepare for vector storage
     const recordsWithSummaries = await Promise.all(
       syntheticData.map(async (record) => ({
         pageContent: await createItemSummary(record),
-        metadata: {...record}
+        metadata: { ...record },
       }))
-    )
-    
+    );
+
     for (const record of recordsWithSummaries) {
       // Create vector embeddings and store in MongoDB Atlas using Gemini
       await MongoDBAtlasVectorSearch.fromDocuments(
@@ -160,14 +160,17 @@ async function populateDatabase(): Promise<void> {
           textKey: "embedding_text", // Field name for searchable text
           embeddingKey: "embedding", // Field name for vector embeddings
         }
-      )
-      console.log("Successfully processed & saved record:", record.metadata.item_id)
+      );
+      console.log(
+        "Successfully processed & saved record:",
+        record.metadata.item_id
+      );
     }
   } catch (error) {
-    console.error("Error populating database:", error)
+    console.error("Error populating database:", error);
   } finally {
-    await client.close()
+    await client.close();
   }
 }
 
-populateDatabase().catch(console.error)
+populateDatabase().catch(console.error);
