@@ -116,6 +116,7 @@ body {
 }
 
 .message-bot {
+  float: left;
   align-self: flex-start;
   background-color: #2a2a2a;
   color: #00ff41;
@@ -124,6 +125,7 @@ body {
 }
 
 .message-user {
+  float: right;
   align-self: flex-end;
   background-color: #00ff41;
   color: #000000;
