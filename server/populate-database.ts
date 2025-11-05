@@ -11,7 +11,7 @@ import "dotenv/config";
 const client = new MongoClient(process.env.MONGO_URI as string);
 
 const bot = new ChatGoogleGenerativeAI({
-  model: "gemini-1.5-flash",
+  model: "gemini-2.0-flash",
   temperature: 0.7,
   apiKey: process.env.GOOGLE_API_KEY,
 });
